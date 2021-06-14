@@ -1,0 +1,30 @@
+import commands
+from requests import get
+import time
+import telepot
+from telepot.loop import MessageLoop
+
+
+def handle(msg):
+    chat_id = msg['chat']['id']
+    command = msg['text']
+    local_ip = commands.getoutput('hostname -I')
+    ip = get('https://api.ipify.org').text
+
+    print 'Got command: %s' % command
+    if command == '/containers':
+        bot.sendMessage(chat_id, commands.getoutput('docker restart php_container_senne mysql-server_senne grafana'))
+    if command == '/docker':
+        bot.sendMessage(chat_id, commands.getoutput('docker ps -a'))
+    if command == '/ip':
+        bot.sendMessage(chat_id, local_ip)
+    elif command == '/pubip':
+        bot.sendMessage(chat_id, ip)
+
+bot = telepot.Bot('')
+
+MessageLoop(bot, handle).run_as_thread()
+print 'I am listening ...'
+
+while 1:
+    time.sleep(10)
